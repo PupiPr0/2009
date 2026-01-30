@@ -48,6 +48,23 @@
             text-align: center;
             margin: 20px 0;
         }
+        
+        /* Скриншоты */
+    #screens-container .card {
+        background: transparent;
+        border: none;
+    }
+
+    #screens-container img {
+        border-radius: 12px;
+        transition: transform 0.4s ease;
+    }
+
+    #screens-container .card-img-overlay p {
+        color: var(--text-primary);
+        font-weight: 600;
+        text-shadow: 0 2px 8px rgba(0,0,0,0.8);
+    }
     </style>
 </head>
 <body>
@@ -55,7 +72,7 @@
         <h1>Добро пожаловать на сервер Lineage 2 Interlude!</h1>
         <p>Дорогие игроки! Мы смогли восстановить наши Interlude x1 сервера с 2009 года! Наши сервера имеют целую историю, от с1 хроник до Interlude!</p>
         <p>В 2009 году на многих наших проектах был установлен Interlude. Многие проекты имели рейты от x0.1 до x1. Некоторые проекты работали вплоть до 2018 года. Сегодня у нас появилась возможность объединить все базы данных и все наши проекты на один сервер Interlude x1!</p>
-        <p>На данный момент мы решаем добавить все это к существующему серверу х1 или же открыть новый. Вы можете написать свое мнение в комментариях под постом <a class="button" href="https://dkon.app/La2WildMP/post/427767?referrer=7609" target="_blank">Тема с постом</a>.</p>
+        <!--p>На данный момент мы решаем добавить все это к существующему серверу х1 или же открыть новый. Вы можете написать свое мнение в комментариях под постом <a class="button" href="https://dkon.app/La2WildMP/post/427767?referrer=7609" target="_blank">Тема с постом</a>.</p-->
         <p>Представьте, что, будучи подростком, вы создавали персонажа, играли, а затем забросили игру. И спустя 17 лет вы заходите в игру, и ваш персонаж находится на той же локации, в том же месте, в котором вы вышли из игры 17 лет назад!</p>
         <p>Никакого доната, только хардкор! Для новичков нашего сервера предусмотрены повышенные рейты до 10 уровня!</p>
         <p>Все скиллы изучаются через книги! Все системы в игре работают! Этот сервер точно заслуживает вашего внимания!</p>
@@ -82,7 +99,33 @@
                 data-height="666px"></script>
 <br>
 <br>
+        
+        <br>
+         <center><h3>Новости</h3></center> 
+        <script async src="https://res.dkon.app/dev/widget.js" 
+                data-dkon-color="sepia" 
+                data-dkon-post="la2playert/427814" 
+                data-width="100%" 
+                data-height="1222px"></script>
+<br>
+        <br>
 
+        
+        <center>
+        <p><a class="button" href="https://bigstorage.dkon.app/?InterludePatch" target="_blank">Скачать Патч</a></p>
+        <p><a class="button" href="https://drive.google.com/file/d/1exnggidr_0e-jyfDrGuTWGiEDKF_foE9/view?usp=sharing" target="_blank">Скачать Клиент Interlude</a></p>
+        <p><a class="button" href="https://theanion.ru/launches/Interlude.exe" target="_blank">Скачать Лаунчер (рекомендуем)</a></p></center>
+        
+        <br><br>
+        
+        <center> <h2 class="section-title display-5">Последние новости с форума</h2></center>
+        <center><div id="news-container" class="row">
+            <!-- Новости будут загружены динамически -->
+             <div class="text-center">Загрузка новостей...</div> 
+        </div></center>
+
+        <br>
+        <br>
          <footer class="footer bg-light py-5">
         <div class="container" id="dkon-footer">
             
@@ -112,6 +155,73 @@
             }, 1000);
         </script>
         <script src="https://theanion.ru/promo/f.js"></script>
+        
+        <script>
+        
+          // Новости
+    const apiUrls = [
+        { name: '', url: 'https://stream-injector-api-client-user-costum-app-and-explore-feed.dkon.app/?groupId=ODI5NA==' },
+      //  { name: 'Interlude x1', url: 'https://stream-injector-api-client-user-costum-app-and-explore-feed.dkon.app/?groupId=MTU5' },
+       // { name: 'Interlude x3', url: 'https://stream-injector-api-client-user-costum-app-and-explore-feed.dkon.app/?groupId=OTIyMg==' },
+      //  { name: 'Interlude x20', url: 'https://stream-injector-api-client-user-costum-app-and-explore-feed.dkon.app/?groupId=MTAyMDE=' },
+      //  { name: 'Interlude PvP', url: 'https://stream-injector-api-client-user-costum-app-and-explore-feed.dkon.app/?groupId=OTM2NA==' },
+      //  { name: 'Gracia Final x1', url: 'https://stream-injector-api-client-user-costum-app-and-explore-feed.dkon.app/?groupId=NzYxMQ==' }
+    ];
+
+    const newsContainer = document.getElementById('news-container');
+    newsContainer.innerHTML = '';
+
+    apiUrls.forEach(section => {
+        fetch(section.url)
+            .then(r => r.json())
+            .then(data => {
+                if (data.items && data.items.length > 0) {
+                    // Сортируем по дате (самые новые сверху)
+                    const sorted = data.items.sort((a, b) => (b.createAt || 0) - (a.createAt || 0)).slice(0, 2);
+
+                    const sectionDiv = document.createElement('div');
+                    sectionDiv.className = 'col-12 mb-5';
+                    sectionDiv.innerHTML = `<h4 class="text-center mb-4">${section.name}</h4>`;
+
+                    sorted.forEach(item => {
+                        let username = item.fromUserUsername || (item.owner && item.owner.username) || 'Unknown';
+                        let fullname = item.fromUserFullname || (item.owner && item.owner.fullname) || username;
+
+                        // Специально для форума: если имя выглядит как название группы или пустое — пишем "Администрация"
+                     /*   if (section.name === 'Форум') {
+                            const badNames = ['L2 Gracia Final', 'Interlude', 'Help', 'La2WildMP', '']; // можно добавить другие
+                            if (badNames.some(bad => fullname.includes(bad)) || fullname.trim() === '' || fullname === username) {
+                                fullname = 'Администрация';
+                            }
+                        } */
+
+                        let post = (item.post || '').replace(/<br>/g, '\n').trim();
+                        if (post.length > 300) post = post.substring(0, 297) + '...';
+
+                        const date = item.date || new Date(item.createAt * 1000).toLocaleDateString('ru-RU');
+                        const link = `https://dkon.app/${username}/post/${item.id}`;
+
+                        const card = `
+                            <div class="news-card">
+                                <h5>${fullname} <!-- •  ${date} --></h5>
+                                <p>${post.replace(/\n/g, '<br>')}</p>
+                                <a href="${link}" target="_blank">Читать полностью →</a>
+                            </div>`;
+                        sectionDiv.innerHTML += card;
+                    });
+
+                    newsContainer.appendChild(sectionDiv);
+                }
+            })
+            .catch(err => {
+                console.error('Ошибка загрузки новостей ' + section.name, err);
+                // Можно добавить сообщение об ошибке на страницу, если нужно
+            });
+    });
+        
+        
+        
+        </script>
     </div>
 </body>
 </html>
